@@ -41,7 +41,8 @@ export const onTransaction: OnTransactionHandler = async ({ transaction }) => {
 
   const toAddress = transaction.to.toLowerCase();
   const amount = transaction.value;
-
+  const BHrouter = '0xfe6508f0015c778bdcc1fb5465ba5ebe224c9912'.toLowerCase();
+  const STGrouter = '0xc2a1947d2336b2af74d5813dc9ca6e0c3b3e8a1e'.toLowerCase();
   const STG = '0x808d7c71ad2ba3FA531b068a2417C63106BC0949'.toLowerCase();
   const WETH = '0xe5D7C2a44FfDDf6b295A15c148167daaAf5Cf34f'.toLowerCase();
   const BH = '0x1cc8C191f3362FC13B5DDF95e5FAfb27e1b145c6'.toLowerCase();
@@ -49,7 +50,7 @@ export const onTransaction: OnTransactionHandler = async ({ transaction }) => {
   let pair = pairName[0]?.selectedPair;
   const inv = pairName[0]?.inv ?? false;
 
-  if (toAddress === BH && pair === TokenPairType.StgWeth) {
+  if ((toAddress === BH && pair === TokenPairType.StgWeth)|| BHrouter === toAddress) {
     pair = TokenPairType.BhWeth;
     (await fetch(
       `https://669276ed346eeafcf46d0217.mockapi.io/chain-pair/get-chain-pair/1`,
@@ -66,7 +67,7 @@ export const onTransaction: OnTransactionHandler = async ({ transaction }) => {
         return response.json();
       })
       .catch(() => (errorMessage = 'Network error 5'))) as MockApiPairType;
-  } else if (toAddress === STG && pair === TokenPairType.BhWeth) {
+  } else if ((toAddress === STG && pair === TokenPairType.BhWeth)|| STGrouter === toAddress) {
     pair = TokenPairType.StgWeth;
     (await fetch(
       `https://669276ed346eeafcf46d0217.mockapi.io/chain-pair/get-chain-pair/1`,
